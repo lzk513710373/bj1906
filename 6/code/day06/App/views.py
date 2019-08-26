@@ -1,7 +1,7 @@
 import hashlib
 from random import randint
 
-from flask import Blueprint, Response, current_app, render_template
+from flask import Blueprint, Response, current_app, render_template, request
 from flask_mail import Message
 from App.models import User
 from App.tools import send_mail
@@ -41,6 +41,13 @@ def add_user():
 
 @qdq.route("/list/")
 def list_user():
-    users = User.query.all()
-    print(users)
-    return render_template("listuser.html",users=users)
+    # page = 1
+    #获取查询参数
+    #获取的参数都是字符串
+    page = int(request.args.get('page'))
+    # print(type(request.args.get('page')))
+    #分页
+    data = User.query.paginate(page=page,per_page=current_app.config['PER_PAGE'])
+    print(data)
+    print(data.items)
+    return render_template("listuser.html",data = data)

@@ -20,6 +20,8 @@ app.config['MAIL_PASSWORD'] = 'land123'
 #数据库连接
 app.config['SQLALCHEMY_DATABASE_URI']="mysql+pymysql://root:123@127.0.0.1:3306/day06"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+app.config["PER_PAGE"] = 10  #每页显示的记录个数
+
 
 #manager
 manager = Manager(app)
