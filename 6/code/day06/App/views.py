@@ -1,9 +1,11 @@
-from flask import Blueprint, Response, current_app
+import hashlib
+from random import randint
+
+from flask import Blueprint, Response, current_app, render_template
 from flask_mail import Message
-
+from App.models import User
 from App.tools import send_mail
-from .extens import mail
-
+from .extens import mail, db
 
 qdq = Blueprint('qdq',__name__,url_prefix='/mail')
 
@@ -22,3 +24,23 @@ def my_send_mail():
               to="313728420@qq.com,291590691@qq.com",name='成少雷')
 
     return Response("hello")
+
+@qdq.route("/add/")
+def add_user():
+    for i in range(23,50):
+        user = User()
+        user.username = 'test'+str(i)
+        password = str(randint(10000,1000000))
+        user.password_hash = hashlib.sha1(password.encode('utf8')).hexdigest()
+        user.gender = randint(0,1)
+
+        db.session.add(user)
+        db.session.commit()
+
+    return Response("ok")
+
+@qdq.route("/list/")
+def list_user():
+    users = User.query.all()
+    print(users)
+    return render_template("listuser.html",users=users)
